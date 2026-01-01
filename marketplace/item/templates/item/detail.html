@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ item.name }} - Marketplace{% endblock %}
+
+{% block content %}
+
+<div class="grid grid-cols-5 gap-6">
+    <div class="col-span-3">
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="rounded-xl">
+    </div>
+
+    <div class="col-span-2">
+        <h1 class="text-3xl font-bold mb-4">{{ item.name }}</h1>
+        <p class="text-gray-700 mb-6">{{ item.description }}</p>
+        <p class="text-xl font-semibold mb-4">Price: ${{ item.price }}</p>
+        <p class="text-gray-600 font-semibold mb-4">Seller: {{ item.created_by.username }}</p>
+        <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">Contact Seller</button>
+    </div>
+</div>
+
+<div class="mt-12 mb-6">
+    <h2 class="text-2xl font-bold mb-6">Related items</h2>
+    <div class="grid grid-cols-4 gap-4">
+        {% for other_item in related_items %}
+        <div>
+            <a href="{% url 'item:item_detail' other_item.id %}">
+                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <img src="{{ other_item.image.url }}" alt="{{ other_item.name }}" class="rouded-t-xl object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">{{ other_item.name }}</h3>
+                        <p class="text-gray-600 mb-4">Price: ${{ other_item.price }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
