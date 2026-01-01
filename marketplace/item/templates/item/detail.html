@@ -11,10 +11,23 @@
 
     <div class="col-span-2">
         <h1 class="text-3xl font-bold mb-4">{{ item.name }}</h1>
+        {% if item.description %}
         <p class="text-gray-700 mb-6">{{ item.description }}</p>
+        {% endif %}
         <p class="text-xl font-semibold mb-4">Price: ${{ item.price }}</p>
         <p class="text-gray-600 font-semibold mb-4">Seller: {{ item.created_by.username }}</p>
-        <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">Contact Seller</button>
+        {% if request.user == item.created_by %}
+        <div class="mt-6 p-6 bg-white rounded-xl">
+            <p>This is your item!</p>
+
+            <div class="mt-4 space-x-4">
+                <a href="{% url 'item:edit' item.id %}" class="px-6 py-3 bg-teal-500 text-white rounded-lg hover:bg-teal-700 transition-colors duration-300">Edit Item</a>
+                <a href="{% url 'item:delete' item.id %}" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-300">Delete Item</a>
+            </div>
+        </div>
+        {% else %}
+            <button class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">Contact Seller</button>
+        {% endif %}
     </div>
 </div>
 
@@ -22,11 +35,13 @@
     <h2 class="text-2xl font-bold mb-6">Related items</h2>
     <div class="grid grid-cols-4 gap-4">
         {% for other_item in related_items %}
-        <div>
-            <a href="{% url 'item:item_detail' other_item.id %}">
-                <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="{{ other_item.image.url }}" alt="{{ other_item.name }}" class="rouded-t-xl object-cover">
-                    <div class="p-4">
+        <div class="flex">
+            <a class="flex w-full" href="{% url 'item:item_detail' other_item.id %}">
+                <div class="flex flex-col w-full bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <div class="aspect-square w-full bg-gray-100">
+                        <img src="{{ other_item.image.url }}" alt="{{ other_item.name }}" class="rouded-t-xl object-cover">
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow">
                         <h3 class="text-lg font-semibold mb-2">{{ other_item.name }}</h3>
                         <p class="text-gray-600 mb-4">Price: ${{ other_item.price }}</p>
                     </div>
@@ -35,5 +50,5 @@
         </div>
         {% endfor %}
     </div>
-
+</div>
 {% endblock %}
